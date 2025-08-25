@@ -13,6 +13,13 @@ function App() {
 
 	// LocalStorage events retrieval function
 	useEffect(() => {
+    const hasLoaded = sessionStorage.getItem("hasLoaded");
+
+    if(!hasLoaded){
+      localStorage.removeItem("events");
+      sessionStorage.setItem("hasLoaded", "true");
+    }
+
 		const saved = localStorage.getItem("events");
 		if (saved) {
 			try {
