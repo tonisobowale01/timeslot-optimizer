@@ -1,35 +1,69 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import NavigationBar from "./components/navigation";
+import DisplayDock from "./components/display-dock";
+import EventField from "./components/event-field";
+import { showNotification } from "@mantine/notifications";
+import type { EventItem } from "./types";
+import { Button, Stack, Container, Title, Flex } from "@mantine/core";
+import "./App.css";
+import { useEffect, useState } from "react";
 
 function App() {
-  const [count, setCount] = useState(0)
+	const [started, setStarted] = useState(false);
+	const [events, setEvents] = useState<EventItem[]>([]);
 
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+	// LocalStorage events retrieval function
+	useEffect(() => {
+		const saved = localStorage.getItem("events");
+		if (saved) {
+			try {
+				setEvents(JSON.parse(saved));
+			} catch {
+				showNotification({ message: "Corrupted data in storage" });
+				localStorage.removeItem("events");
+			}
+		}
+	}, []);
+
+	// LocalStorage events creation
+	useEffect(() => {
+		try {
+			localStorage.setItem("events", JSON.stringify(events));
+		} catch {
+			showNotification({ message: "Error saving events" });
+		}
+	}, [events]);
+	return (
+		<Container size="sm" py="md">
+			{!started ? (
+				<>
+					<Stack h="60vh" align="center" justify="center" gap="xl">
+						<Title order={3}>Timeslot Optimizer</Title>
+						<Button
+							aria-label="Start Timeslot optimizer"
+							fullWidth
+							onClick={() => setStarted(true)}
+						>
+							Let's Begin
+						</Button>
+					</Stack>
+				</>
+			) : (
+				<>
+					<Flex
+						className="main"
+						direction="column"
+						h="90vh"
+						p={{ base: "xs", sm: "lg" }}
+					>
+						<NavigationBar />
+						<DisplayDock events={events} />
+
+						<EventField events={events} setEvents={setEvents} />
+					</Flex>
+				</>
+			)}
+		</Container>
+	);
 }
 
-export default App
+export default App;
