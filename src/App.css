@@ -186,6 +186,9 @@ body {
 	}
 }
 @media (max-width: 390px) {
+	#root {
+		padding: 1rem 0 0 0;
+	}
 	.miniTitle {
 		font-size: 0.94rem;
 	}
