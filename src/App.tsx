@@ -3,12 +3,11 @@ import DisplayDock from "./components/display-dock";
 import EventField from "./components/event-field";
 import { showNotification } from "@mantine/notifications";
 import type { EventItem } from "./types";
-import { Button, Stack, Container, Title, Flex } from "@mantine/core";
+import { Container, Flex } from "@mantine/core";
 import "./App.css";
 import { useEffect, useState } from "react";
 
 function App() {
-	const [started, setStarted] = useState(false);
 	const [events, setEvents] = useState<EventItem[]>([]);
 
 	// LocalStorage events retrieval function
@@ -41,20 +40,6 @@ function App() {
 	}, [events]);
 	return (
 		<Container size="sm" py="md">
-			{!started ? (
-				<>
-					<Stack h="60vh" align="center" justify="center" gap="xl">
-						<Title order={3}>Timeslot Optimizer</Title>
-						<Button
-							aria-label="Start Timeslot optimizer"
-							fullWidth
-							onClick={() => setStarted(true)}
-						>
-							Let's Begin
-						</Button>
-					</Stack>
-				</>
-			) : (
 				<>
 					<Flex
 						className="main"
@@ -68,7 +53,6 @@ function App() {
 						<EventField events={events} setEvents={setEvents} />
 					</Flex>
 				</>
-			)}
 		</Container>
 	);
 }

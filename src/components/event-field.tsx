@@ -5,6 +5,8 @@ import {
 	Autocomplete,
 	Select,
 	MultiSelect,
+	ColorInput,
+	Flex,
 } from "@mantine/core";
 import { useState } from "react";
 import { TimePicker } from "@mantine/dates";
@@ -29,6 +31,7 @@ const EventField = ({
 	setEvents: React.Dispatch<React.SetStateAction<EventItem[]>>;
 }) => {
 	const [label, setLabel] = useState("");
+	const [color, setColor] = useState("#3b82f6");
 	const [startTime, setStartTime] = useState("");
 	const [endTime, setEndTime] = useState<string | undefined>("");
 	const [selectedWeekday, setSelectedWeekday] = useState<Weekday | null>(null);
@@ -70,6 +73,7 @@ const EventField = ({
 		// New Event Creation
 		const newEvent: EventItem = {
 			label,
+			color: color,
 			start: startTime,
 			end: endTime,
 			days: daysToAdd,
@@ -89,13 +93,43 @@ const EventField = ({
 	return (
 		<Stack>
 			{/* Label Section */}
-			<Autocomplete
-				label="Label"
-				placeholder="Pick a label or enter yours"
-				data={["Work", "Meeting", "Gym", "Class", "Gaming"]}
-				value={label}
-				onChange={setLabel}
-			/>
+			<Flex align="center" justify="flex-start" direction="row" gap="xs">
+				<Autocomplete
+					label="Label"
+					placeholder="Pick a label or enter yours"
+					data={["Work", "Meeting", "Gym", "Class", "Gaming"]}
+					value={label}
+					onChange={setLabel}
+					style={{ flexGrow: "0.99" }}
+				/>
+				{/* Color Section */}
+				<ColorInput
+					label="Color"
+					value={color}
+					onChange={setColor}
+					format="hex"
+					withEyeDropper={false}
+					withPicker={false}
+					disallowInput
+					closeOnColorSwatchClick
+					style={{ flexGrow: "0.01" }}
+					w={{ base: "40", sm: "60", lg: "80" }}
+					swatches={[
+						"#3b82f6",
+						"#333333",
+						"#ff80ed",
+						"#6897bb",
+						"#794044",
+						"#ff7f50",
+						"#cc0000",
+						"#660066",
+						"#468499",
+						"#008080",
+					]}
+					swatchesPerRow={5}
+				/>
+			</Flex>
+			{/* Use mantine's color input component with color picker and free input disabled. Always remove eye dropper prop */}
 
 			{/* Time Section */}
 			<Group grow>

@@ -8,6 +8,7 @@ import { Button, Col, Container, Row } from "react-bootstrap";
 import type { EventItem, Weekday } from "../types";
 import FreeSlot from "./free-slot";
 import "../App.css";
+// import { IconTrash } from "@tabler/icons-react";
 
 dayjs.extend(duration);
 dayjs.extend(isSameOrAfter);
@@ -157,6 +158,7 @@ const DisplayDock: React.FC<{ events: EventItem[] }> = ({ events }) => {
 											))}
 
 											{positioned.map((event, eIdx) => {
+												const color = event.color;
 												const top = event.startTime.diff(
 													dayjs("2000-01-01T00:00"),
 													"minute"
@@ -199,6 +201,7 @@ const DisplayDock: React.FC<{ events: EventItem[] }> = ({ events }) => {
 																	height: `${(height / 60) * hourHeight}px`,
 																	left: `${leftPercent}%`,
 																	width: `${widthPercent}%`,
+																	background: `${color}`,
 																	border: "2px solid #f1f1f1",
 																	borderRadius: "6px",
 																	zIndex: 2,
@@ -242,14 +245,15 @@ const DisplayDock: React.FC<{ events: EventItem[] }> = ({ events }) => {
 				</Row>
 			</Container>
 
-			<Button
-				variant="primary"
-				className="btns my-2"
-				onClick={() => setFreeSlots((prev) => !prev)}
-				style={{ width: "100%" }}
-			>
-				{freeSlots ? "Show events only" : "Show free time"}
-			</Button>
+				<Button
+					variant="primary"
+					className="btns my-2"
+					onClick={() => setFreeSlots((prev) => !prev)}
+					style={{ width: "100%" }}
+				>
+					{freeSlots ? "Show events only" : "Show free time"}
+				</Button>
+				{/* Implement a clear button by the side of freeslot */}
 		</>
 	);
 };

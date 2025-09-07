@@ -113,8 +113,8 @@ body {
 	background: var(--accent-color);
 }
 .event-block {
-	background: var(--accent-color);
-	background-color: #3b82f6;
+	/* background: var(--accent-color); */
+	/* background-color: #3b82f6; */
 	color: white;
 	font-size: 12px;
 	padding: 2px 4px;

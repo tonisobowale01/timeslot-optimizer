@@ -9,6 +9,7 @@ export type Weekday =
 
 export interface EventItem {
   label: string;
+  color: string;
   start: string;
   end: string;
   days: Weekday[];
