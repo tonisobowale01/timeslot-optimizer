@@ -1,7 +1,20 @@
-import { Group, Title, Container, Text } from "@mantine/core";
+import {
+	Group,
+	Title,
+	Container,
+	Text,
+	Box,
+	Badge,
+	Divider,
+	Drawer,
+} from "@mantine/core";
 import "../App.css";
+import { IconMenu2 } from "@tabler/icons-react";
+import { useDisclosure } from "@mantine/hooks";
 
 const Navbar = () => {
+	const [opened, { open, close }] = useDisclosure(false);
+
 	return (
 		<Container py="xs" px="md" className="navigation" fluid>
 			<Group
@@ -9,6 +22,28 @@ const Navbar = () => {
 				className="navMini"
 				style={{ maxWidth: "55%", margin: "0 auto" }}
 			>
+				<Box style={{ position: "absolute", left: "2rem" }}>
+					<Drawer opened={opened} onClose={close} size={200}>
+						<Text>Timeslot Optimizer</Text>
+						<Text style={{ fontSize: "0.52rem" }} my={5}>
+							No account created = No data collected
+						</Text>
+						<Divider />
+						<Text td="line-through" style={{ fontSize: "0.9rem" }} my={5}>
+							Theme change
+						</Text>
+						<Text style={{ fontSize: "0.9rem" }}>coming soon</Text>
+						<Divider />
+						<Group my={5}>
+							<Text style={{ color: "grey", fontSize: "0.8rem" }}>v1.5</Text>
+							<Badge color="red" size="xs">
+								Active
+							</Badge>
+						</Group>
+					</Drawer>
+					<IconMenu2 stroke={2} onClick={open} />
+				</Box>
+
 				<Title order={4} className="miniTitle">
 					Timeslot Optimizer
 				</Title>

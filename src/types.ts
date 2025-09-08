@@ -8,6 +8,7 @@ export type Weekday =
   | "Saturday";
 
 export interface EventItem {
+  id: number,
   label: string;
   color: string;
   start: string;

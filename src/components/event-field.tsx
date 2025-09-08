@@ -24,11 +24,11 @@ const weekdays: Weekday[] = [
 ];
 
 const EventField = ({
-	events,
 	setEvents,
+	setLastEvents,
 }: {
-	events: EventItem[];
 	setEvents: React.Dispatch<React.SetStateAction<EventItem[]>>;
+	setLastEvents: React.Dispatch<React.SetStateAction<number[]>>;
 }) => {
 	const [label, setLabel] = useState("");
 	const [color, setColor] = useState("#3b82f6");
@@ -72,6 +72,7 @@ const EventField = ({
 
 		// New Event Creation
 		const newEvent: EventItem = {
+			id: Date.now(),
 			label,
 			color: color,
 			start: startTime,
@@ -79,7 +80,8 @@ const EventField = ({
 			days: daysToAdd,
 		};
 
-		setEvents([...events, newEvent]);
+		setEvents((prev) => [...prev, newEvent]);
+		setLastEvents((prev) => [...prev, newEvent.id]);
 
 		// Reset Event Field
 		setLabel("");

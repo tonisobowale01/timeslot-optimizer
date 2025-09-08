@@ -9,17 +9,21 @@ import { useEffect, useState } from "react";
 
 function App() {
 	const [events, setEvents] = useState<EventItem[]>([]);
+	const [lastEvents, setLastEvents] = useState<number[]>([]);
 
 	// LocalStorage events retrieval function
 	useEffect(() => {
-    const hasLoaded = sessionStorage.getItem("hasLoaded");
+		const hasLoaded = sessionStorage.getItem("hasLoaded");
 
-    if(!hasLoaded){
-      localStorage.removeItem("events");
-      sessionStorage.setItem("hasLoaded", "true");
-    }
+		if (!hasLoaded) {
+			localStorage.removeItem("events");
+			localStorage.removeItem("lastEvents");
+			sessionStorage.setItem("hasLoaded", "true");
+		}
 
 		const saved = localStorage.getItem("events");
+		const savedStack = localStorage.getItem("lastEvents");
+
 		if (saved) {
 			try {
 				setEvents(JSON.parse(saved));
@@ -28,31 +32,70 @@ function App() {
 				localStorage.removeItem("events");
 			}
 		}
+
+		if (savedStack) {
+			try {
+				setLastEvents(JSON.parse(savedStack));
+			} catch {
+				showNotification({ message: "Corrupted undo history" });
+				localStorage.removeItem("lastEvents");
+			}
+		}
 	}, []);
 
 	// LocalStorage events creation
 	useEffect(() => {
 		try {
 			localStorage.setItem("events", JSON.stringify(events));
+			localStorage.setItem("lastEvents", JSON.stringify(lastEvents));
 		} catch {
-			showNotification({ message: "Error saving events" });
+			showNotification({ message: "Error saving to localStorage" });
 		}
-	}, [events]);
+	}, [events, lastEvents]);
+
+	// Undo and delete events from localStorage
+	const undoLastEvent = () => {
+		if (lastEvents.length === 0) {
+			showNotification({ message: "No events to undo" });
+			return;
+		}
+
+		setLastEvents((prev) => {
+			const newStack = [...prev];
+			const lastId = newStack.pop();
+			if (lastId !== undefined) {
+				setEvents((prevEvents) => prevEvents.filter((e) => e.id !== lastId));
+			}
+			return newStack;
+		});
+	};
+
+	const clearEvents = () => {
+		if (events.length === 0) {
+			showNotification({ message: "No events to clear" });
+			return;
+		}
+		setEvents([]);
+		setLastEvents([]);
+		localStorage.removeItem("events");
+		localStorage.removeItem("lastEvents");
+		showNotification({ message: "All events cleared" });
+	};
 	return (
 		<Container size="sm" py="md">
-				<>
-					<Flex
-						className="main"
-						direction="column"
-						h="90vh"
-						p={{ base: "xs", sm: "lg" }}
-					>
-						<NavigationBar />
-						<DisplayDock events={events} />
+			<>
+				<Flex
+					className="main"
+					direction="column"
+					h="90vh"
+					p={{ base: "xs", sm: "lg" }}
+				>
+					<NavigationBar />
+					<DisplayDock events={events} onUndo={undoLastEvent} onClear={clearEvents} visibleFrom={lastEvents.length > 0}/>
 
-						<EventField events={events} setEvents={setEvents} />
-					</Flex>
-				</>
+					<EventField setEvents={setEvents} setLastEvents={setLastEvents} />
+				</Flex>
+			</>
 		</Container>
 	);
 }

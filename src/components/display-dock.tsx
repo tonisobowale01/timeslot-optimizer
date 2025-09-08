@@ -1,6 +1,6 @@
 import { useState } from "react";
 import dayjs from "dayjs";
-import { Box, Group, Paper, Popover, Text, Title } from "@mantine/core";
+import { Box, Flex, Group, Paper, Popover, Text, Title } from "@mantine/core";
 import duration from "dayjs/plugin/duration";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
@@ -8,6 +8,7 @@ import { Button, Col, Container, Row } from "react-bootstrap";
 import type { EventItem, Weekday } from "../types";
 import FreeSlot from "./free-slot";
 import "../App.css";
+import { IconArrowBackUp, IconTrash } from "@tabler/icons-react";
 // import { IconTrash } from "@tabler/icons-react";
 
 dayjs.extend(duration);
@@ -31,6 +32,13 @@ type TimedEvent = EventItem & {
 type PositionedEvent = TimedEvent & {
 	colIndex: number;
 	totalCols: number;
+};
+
+type ButtonsProps = {
+	events: EventItem[];
+	onUndo: () => void;
+	onClear: () => void;
+	visibleFrom: boolean;
 };
 
 function getPositionedEvents(dayEvents: EventItem[]): PositionedEvent[] {
@@ -102,7 +110,7 @@ function getPositionedEvents(dayEvents: EventItem[]): PositionedEvent[] {
 	return positioned;
 }
 
-const DisplayDock: React.FC<{ events: EventItem[] }> = ({ events }) => {
+const DisplayDock: React.FC<ButtonsProps> = ({ events, onUndo, onClear, visibleFrom }) => {
 	const [freeSlots, setFreeSlots] = useState(false);
 	const [openedSlot, setOpenedSlot] = useState<string | null>(null);
 
@@ -245,15 +253,51 @@ const DisplayDock: React.FC<{ events: EventItem[] }> = ({ events }) => {
 				</Row>
 			</Container>
 
+			<Flex
+				justify="center"
+				align="center"
+				direction="row"
+				wrap="nowrap"
+				my="xs"
+			>
+				{visibleFrom && (
+					<Button
+						variant="danger"
+						className="deleteBtns"
+						title="Undo"
+						onClick={onUndo}
+						style={{
+							background: "#6BB6FF ",
+							border: "1px solid rgba(71, 158, 240, 0.8)",
+						}}
+					>
+						<IconArrowBackUp stroke={2} />
+					</Button>
+				)}
+
 				<Button
 					variant="primary"
-					className="btns my-2"
+					className="btns mx-1 p-2"
 					onClick={() => setFreeSlots((prev) => !prev)}
-					style={{ width: "100%" }}
+					style={{ width: "100%", flexGrow: "9" }}
 				>
 					{freeSlots ? "Show events only" : "Show free time"}
 				</Button>
-				{/* Implement a clear button by the side of freeslot */}
+				{visibleFrom && (
+					<Button
+						variant="danger"
+						className="deleteBtns"
+						title="Delete"
+						onClick={onClear}
+						style={{
+							background: "#e74c3c",
+							border: "1px solid rgba(220, 53, 69, 0.8)",
+						}}
+					>
+						<IconTrash stroke={2} />
+					</Button>
+				)}
+			</Flex>
 		</>
 	);
 };
