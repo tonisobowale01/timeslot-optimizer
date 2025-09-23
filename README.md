@@ -1,6 +1,6 @@
-# Timeslot Optimizer
+# TimeOptima
 
-Timeslot Optimizer is a project designed to help users visually manage their weekly availability. It's built for anyone with a busy schedule who wants to optimize their time and increase productivity quickly and effortlessly.
+TimeOptima is a project designed to help users visually manage their weekly availability. It's built for anyone with a busy schedule who wants to optimize their time and increase productivity quickly and effortlessly.
 
 The app identifies free time slots in the user's schedule- without requiring account creation or login. It focuses on simplicity, privacy, and and immediate value.
 
@@ -8,7 +8,7 @@ The app identifies free time slots in the user's schedule- without requiring acc
 
 ## Features
 
-- Visualize your full week with hourly breakdons for each day
+- Visualize your full week with hourly breakdowns for each day
 - Obtain empty time slots with ease
 - Supports overlapping events with a clean, column-based layout
 - Seamlessly adapts to different screen sizes
@@ -71,7 +71,7 @@ Before installation, please make sure you have already installed the following t
 
 <sup>[(Back to top)](#table-of-contents)</sup>
 
-Timeslot Optimizer is licensed under the MIT License - [License][2]
+TimeOptima is licensed under the MIT License - [License][2]
 
 ## Support & Project Status
 
