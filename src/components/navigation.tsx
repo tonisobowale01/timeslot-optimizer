@@ -24,7 +24,7 @@ const Navbar = () => {
 			>
 				<Box style={{ position: "absolute", left: "2rem" }}>
 					<Drawer opened={opened} onClose={close} size={200}>
-						<Text>Timeslot Optimizer</Text>
+						<Text>TimeOptima</Text>
 						<Text style={{ fontSize: "0.52rem" }} my={5}>
 							No account created = No data collected
 						</Text>
@@ -45,7 +45,7 @@ const Navbar = () => {
 				</Box>
 
 				<Title order={4} className="miniTitle">
-					Timeslot Optimizer
+					TimeOptima
 				</Title>
 				<Text
 					component="a"
