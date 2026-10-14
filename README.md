@@ -1,85 +1,50 @@
 # TimeOptima
 
-TimeOptima is a project designed to help users visually manage their weekly availability. It's built for anyone with a busy schedule who wants to optimize their time and increase productivity quickly and effortlessly.
+Find the time you didn’t know you had. A private, browser-only tool for understanding a recurring weekly schedule.
 
-The app identifies free time slots in the user's schedule- without requiring account creation or login. It focuses on simplicity, privacy, and and immediate value.
+## Run locally
 
-<!-- All sections are headings 2 -->
+Requires Node.js 20+ and npm.
 
-## Features
+```sh
+npm install
+npm run dev
+npm test
+npm run build
+npm run lint
+```
 
-- Visualize your full week with hourly breakdowns for each day
-- Obtain empty time slots with ease
-- Supports overlapping events with a clean, column-based layout
-- Seamlessly adapts to different screen sizes
-- Hover over events to reveal its information
-- Use the app immediately- no accounts, no setup, just scheduling
-- Built using React, TypeScript, React-Bootstrap, and Mantine for a clean, responsive UI
+## Use it
 
-## Live Demo
+- Add a commitment, choose its repeat days and times, and select a color.
+- Select an event to edit or delete it. Use **Undo** to restore the last schedule change (up to 20 changes).
+- Click an empty calendar hour or a free interval to add a commitment.
+- The availability panel shows free intervals and the longest opening. Ties use weekday and start-time order.
+- **Find me time** searches selected days within a requested time range. It suggests the earliest exact-duration slot in each qualifying free interval. Selecting a result opens the commitment editor; it does not book automatically.
+- **Availability hours** defaults to 8 AM–8 PM and can be adjusted. Events outside those hours remain visible in the calendar.
+- Mobile uses a day picker, chronological agenda, and selected-day availability. Desktop shows the full week.
 
-<!-- If you want to see the website in execution, check [here][1] -->
+This is a repeating weekly planner, not a dated calendar. Overnight commitments must be split into separate events on the two days. Times use the device’s local interpretation; no time-zone conversion is performed. Availability is based only on the commitments entered here.
 
-### Table of Contents
+## Privacy
 
-- [Installation](#installation)
-- [Usage](#usage])
-- [License](#license)
-- [Support & Project Status](#support--project-status)
+Schedules and undo history live only in React memory. There is no account, server schedule storage, calendar connection, telemetry, or external font request. Refreshing or closing the page clears the schedule. On startup, the app removes the previous version’s `events` and `lastEvents` localStorage keys and its `hasLoaded` sessionStorage marker; old saved events are not imported. Browser storage can be blocked without breaking the app. Normal hosting still serves the application files.
 
-### Pre-requisites
+## Architecture
 
-Before installation, please make sure you have already installed the following tools:
+React 18, TypeScript, Vite, Mantine and Tabler icons. No dependencies were added. Mantine provides focus-trapped dialogs, Escape dismissal and focus restoration; forms use visible labels and keyboard-operable controls. Events carry names and times as well as colors. Reduced-motion preferences disable transitions.
 
-+ [Git](https://git-scm.com/downloads)
-+ [NodeJs](https://nodejs.org/en/download/)
+- `App.tsx`: in-memory schedule, undo, dialogs and page sections.
+- `components/ScheduleCalendar.tsx`: desktop calendar and mobile day agenda.
+- `components/AvailabilityPanel.tsx`: computed gaps and longest opening.
+- `components/EventModal.tsx`: validated creation/editing with repeat days and overlap notices.
+- `components/FindTimeModal.tsx`: duration/day/window search.
+- `utils/scheduling.ts`: minute-based interval merging, clipping, free-time calculation, slot finding, overlap layout, validation and formatting. These pure functions do not use browser storage or dates.
 
-## Installation
+Overlapping commitments are allowed. Connected overlap groups use separate calendar lanes; availability merges their occupied intervals first so shared time is counted once. Touching intervals do not produce a zero-length free gap.
 
-<sup>[(Back to top)](#table-of-contents)</sup>
+## Verification
 
-1. Clone the project, you can use the following command:
+`npm test` uses Node’s test runner and the existing esbuild dependency to load TypeScript without adding a testing package. It checks nested/chained/touching overlaps, interval clipping, full/empty days, duration/day search constraints, validation, calendar lane assignment, formatting, and 100 deterministic generated schedules whose free/busy coverage must partition the search window.
 
-   ```bash
-   git clone https://github.com/<your-github-username>/TimeslotOptimizer
-   ```
-
-2. Navigate to the project directory
-
-   ```bash
-   cd TimeslotOptimizer
-   cd timeslot-optimizer
-   ```
-
-3. Install dependencies with npm install
-
-    ```bash
-    npm install
-    ```
-4. Run the project
-
-    ```bash
-    npm run dev
-    ```
-
-## Usage
-
-<sup>[(Back to top)](#table-of-contents)</sup>
-
-
-## License
-
-<sup>[(Back to top)](#table-of-contents)</sup>
-
-TimeOptima is licensed under the MIT License - [License][2]
-
-## Support & Project Status
-
-<sup>[(Back to top)](#table-of-contents)</sup>
-
-This project needs a star from you. Don’t forget to leave a star.
-
-This project is still under development.
-
-[1]: https://
-[2]: https://
+Production compilation: `npm run build`. Code checks: `npm run lint`. Browser interaction and responsive visual checks should also be performed when changing the UI.
